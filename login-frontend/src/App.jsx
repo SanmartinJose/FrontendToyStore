@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const API_URL = 'https://toystorebackend.onrender.com';
+const GOOGLE_CLIENT_ID = '639044841839-ddle5ha663v3qd44d8rphotrnkjj59n9.apps.googleusercontent.com';
 
 // Página de Login
 function Login() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -18,16 +20,30 @@ function Login() {
 
         try {
             const res = await axios.post(`${API_URL}/login`, { username, password });
-            navigate('/dashboard', { state: res.data });
+            navigate('/dashboard');
         } catch (err) {
-            setError('Usuario o contraseña incorrecto 1');
+            setError('Usuario o contraseña incorrecto');
+        }
+    };
+
+    const handleGoogleLoginSuccess = async (credentialResponse) => {
+        try {
+            const res = await axios.post(`${API_URL}/google-login`, {
+                token: credentialResponse.credential,
+            });
+
+            console.log("Usuario autenticado:", res.data.user);
+            navigate('/dashboard');
+        } catch (err) {
+            console.error("Error en la autenticación con Google:", err);
+            setError('Error al iniciar sesión con Google');
         }
     };
 
     return (
         <div className="d-flex justify-content-center align-items-center vh-100">
-            <div className="card p-4" style={{ width: '100%', maxWidth: '400px' }}>
-                <h3 className="text-center">Login</h3>
+            <div className="card p-4 text-center" style={{ width: '100%', maxWidth: '400px' }}>
+                <h3>Login</h3>
                 {error && <div className="alert alert-danger">{error}</div>}
                 <form onSubmit={handleLogin}>
                     <div className="mb-3">
@@ -50,6 +66,12 @@ function Login() {
                     </div>
                     <button type="submit" className="btn btn-primary w-100">Login</button>
                 </form>
+
+                <hr />
+
+                <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+                    <GoogleLogin onSuccess={handleGoogleLoginSuccess} onError={() => setError('Error en Google Login')} />
+                </GoogleOAuthProvider>
             </div>
         </div>
     );
@@ -57,13 +79,13 @@ function Login() {
 
 // Página de Dashboard
 function Dashboard() {
-  return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-          <div className="card p-4 text-center" style={{ width: '100%', maxWidth: '400px' }}>
-              <h1>Bienvenido</h1>
-          </div>
-      </div>
-  );
+    return (
+        <div className="d-flex justify-content-center align-items-center vh-100">
+            <div className="card p-4 text-center" style={{ width: '100%', maxWidth: '400px' }}>
+                <h3>Bienvenido</h3>
+            </div>
+        </div>
+    );
 }
 
 // Rutas de la Aplicación
