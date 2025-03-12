@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-route
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';  // Asegúrate de agregar este archivo para los estilos
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 const API_URL = 'https://toystorebackend.onrender.com';
 
@@ -22,6 +23,20 @@ function Login() {
             navigate('/dashboard', { state: res.data });
         } catch (err) {
             setError('Usuario o contraseña incorrecto');
+        }
+    };
+
+    const handleGoogleLogin = (response) => {
+        console.log(response);
+        if (response.credential) {
+            // Aquí puedes enviar el token de Google al backend para validarlo
+            axios.post(`${API_URL}/google-login`, { token: response.credential })
+                .then((res) => {
+                    navigate('/dashboard', { state: res.data });
+                })
+                .catch((err) => {
+                    setError('Error al iniciar sesión con Google');
+                });
         }
     };
 
@@ -55,6 +70,15 @@ function Login() {
                         </div>
                         <button type="submit" className="btn btn-primary w-100">Login</button>
                     </form>
+                    
+                    {/* Botón de inicio de sesión con Google */}
+                    <GoogleOAuthProvider clientId="639044841839-ddle5ha663v3qd44d8rphotrnkjj59n9.apps.googleusercontent.com">
+                        <GoogleLogin
+                            onSuccess={handleGoogleLogin}
+                            onError={() => setError('Error al iniciar sesión con Google')}
+                            useOneTap
+                        />
+                    </GoogleOAuthProvider>
                 </div>
             </div>
         </div>
