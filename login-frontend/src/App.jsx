@@ -20,23 +20,33 @@ function Login() {
             const res = await axios.post(`${API_URL}/login`, { username, password });
             navigate('/dashboard', { state: res.data });
         } catch (err) {
-            setError('Usuario o contraseña incorrecto');
+            setError('Usuario o contraseña incorrectos');
         }
     };
 
     return (
         <div className="d-flex justify-content-center align-items-center vh-100">
-            <div className="card p-4" style={{ width: '300px' }}>
+            <div className="card p-4" style={{ width: '100%', maxWidth: '400px' }}>
                 <h3 className="text-center">Login</h3>
                 {error && <div className="alert alert-danger">{error}</div>}
                 <form onSubmit={handleLogin}>
                     <div className="mb-3">
                         <label className="form-label">Username</label>
-                        <input type="text" className="form-control" onChange={(e) => setUsername(e.target.value)} />
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Password</label>
-                        <input type="password" className="form-control" onChange={(e) => setPassword(e.target.value)} />
+                        <input
+                            type="password"
+                            className="form-control"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
                     <button type="submit" className="btn btn-primary w-100">Login</button>
                 </form>
@@ -46,12 +56,12 @@ function Login() {
 }
 
 // Página de Dashboard
-function Dashboard({ location }) {
+function Dashboard() {
     const userData = location?.state || { username: 'Desconocido', password: 'Desconocida' };
 
     return (
         <div className="d-flex justify-content-center align-items-center vh-100">
-            <div className="card p-4" style={{ width: '300px' }}>
+            <div className="card p-4" style={{ width: '100%', maxWidth: '400px' }}>
                 <h3 className="text-center">Datos del Usuario</h3>
                 <p><strong>Usuario:</strong> {userData.username}</p>
                 <p><strong>Contraseña:</strong> {userData.password}</p>
