@@ -1,13 +1,16 @@
 import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const API_URL = 'https://toystorebackend.onrender.com';
 
-function App() {
+// Página de Login
+function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -15,10 +18,9 @@ function App() {
 
         try {
             const res = await axios.post(`${API_URL}/login`, { username, password });
-            localStorage.setItem('token', res.data.token);
-            alert('Login exitoso');
+            navigate('/dashboard', { state: res.data });
         } catch (err) {
-            setError(err.response?.data?.message || 'Error en el login');
+            setError('Usuario o contraseña incorrecto');
         }
     };
 
@@ -40,6 +42,33 @@ function App() {
                 </form>
             </div>
         </div>
+    );
+}
+
+// Página de Dashboard
+function Dashboard({ location }) {
+    const userData = location?.state || { username: 'Desconocido', password: 'Desconocida' };
+
+    return (
+        <div className="d-flex justify-content-center align-items-center vh-100">
+            <div className="card p-4" style={{ width: '300px' }}>
+                <h3 className="text-center">Datos del Usuario</h3>
+                <p><strong>Usuario:</strong> {userData.username}</p>
+                <p><strong>Contraseña:</strong> {userData.password}</p>
+            </div>
+        </div>
+    );
+}
+
+// Rutas de la Aplicación
+function App() {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+            </Routes>
+        </Router>
     );
 }
 
