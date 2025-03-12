@@ -57,17 +57,13 @@ function Login() {
 
 // Página de Dashboard
 function Dashboard() {
-    const userData = location?.state || { username: 'Desconocido', password: 'Desconocida' };
-
-    return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
-            <div className="card p-4" style={{ width: '100%', maxWidth: '400px' }}>
-                <h3 className="text-center">Datos del Usuario</h3>
-                <p><strong>Usuario:</strong> {userData.username}</p>
-                <p><strong>Contraseña:</strong> {userData.password}</p>
-            </div>
-        </div>
-    );
+  return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+          <div className="card p-4 text-center" style={{ width: '100%', maxWidth: '400px' }}>
+              <h1>Bienvenido</h1>
+          </div>
+      </div>
+  );
 }
 
 // Rutas de la Aplicación
