@@ -5,7 +5,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const API_URL = 'https://toystorebackend.onrender.com';
-const GOOGLE_CLIENT_ID = '639044841839-ddle5ha663v3qd44d8rphotrnkjj59n9.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '1027572672777-2f5avgdj0k6tso1c19eqgqrm6q6vpf9p.apps.googleusercontent.com';
 
 // Página de Login
 function Login() {
