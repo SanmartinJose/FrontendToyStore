@@ -17,7 +17,7 @@ function Login() {
         setError('');
 
         try {
-            const res = await axios.post(`${API_URL}/users`, { username, password });
+            const res = await axios.post(`${API_URL}/login`, { username, password });
             navigate('/dashboard', { state: res.data });
         } catch (err) {
             setError('Usuario o contraseña incorrecto 1');
